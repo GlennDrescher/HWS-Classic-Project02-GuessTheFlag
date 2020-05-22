@@ -42,7 +42,7 @@ class ViewController: UIViewController {
             title = "Correct!"
             score += 1
         } else {
-            title = "Wrong!"
+            title = "Wrong! The flag you tapped was \(countries[sender.tag].uppercased())"
             score -= 1
         }
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Score: " + String(score), style: .done, target: .none, action: .none)
