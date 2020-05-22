@@ -16,9 +16,11 @@ class ViewController: UIViewController {
     var countries = [String]()
     var score = 0
     var correctAnswer = 0
+    var questionAsked = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         
         countries += ["estonia", "france", "germany", "ireland", "italy", "monaco", "nigeria", "poland", "russia", "spain", "uk", "us"]
         
@@ -31,6 +33,8 @@ class ViewController: UIViewController {
         button3.layer.borderColor = UIColor.lightGray.cgColor
         
         askQuestion()
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Score: " + String(score), style: .done, target: .none, action: .none)
     }
     @IBAction func buttonTapped(_ sender: UIButton) {
         var title: String
@@ -41,6 +45,7 @@ class ViewController: UIViewController {
             title = "Wrong!"
             score -= 1
         }
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Score: " + String(score), style: .done, target: .none, action: .none)
         
         let ac = UIAlertController(title: title, message: "Your new score is \(score)", preferredStyle: .actionSheet)
         ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: askQuestion))
@@ -49,6 +54,11 @@ class ViewController: UIViewController {
     }
     
     func askQuestion(action: UIAlertAction! = nil) {
+        if questionAsked == 10 {
+            resetGame()
+            return
+        }
+        
         countries.shuffle()
         
         correctAnswer = Int.random(in: 0...2)
@@ -58,6 +68,18 @@ class ViewController: UIViewController {
         button3.setBackgroundImage(UIImage(named: countries[2]), for: .normal)
         
         title = countries[correctAnswer].uppercased()
+        
+        questionAsked += 1
+    }
+    
+    func resetGame() {
+        let ac = UIAlertController(title: "Your final score: \(score)", message: "You have answered 10 questions. Your game will be reset now." , preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "New Game", style: .default, handler: askQuestion))
+        present(ac, animated: true)
+        
+        score = 0
+        questionAsked = 0
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Score: " + String(score), style: .done, target: .none, action: .none)
     }
 
 
